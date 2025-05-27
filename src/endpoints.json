@@ -40,6 +40,14 @@
     ]
   },
   {
+    "pathPattern": "/me/messages",
+    "method": "post",
+    "toolName": "create-draft-message",
+    "scopes": [
+      "Mail.ReadWrite"
+    ]
+  },
+  {
     "pathPattern": "/me/messages/{message-id}",
     "method": "delete",
     "toolName": "delete-mail-message",

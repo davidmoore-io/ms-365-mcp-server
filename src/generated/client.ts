@@ -23729,7 +23729,7 @@ get the instances of an event. Currently, this operation returns event bodies in
     method: 'post',
     path: '/me/events',
     alias: 'create-calendar-event',
-    description: `Create one or more single-value extended properties in a new or existing instance of a resource. The following user resources are supported: The following group resources: See Extended properties overview for more information about when to use
+    description: `Create one or more multi-value extended properties in a new or existing instance of a resource. The following user resources are supported: The following group resources are supported: See Extended properties overview for more information about when to use
 open extensions or extended properties, and how to specify extended properties.`,
     requestFormat: 'json',
     parameters: [
@@ -24068,16 +24068,43 @@ open extensions or extended properties, and how to specify extended properties.`
     ],
   },
   {
+    method: 'post',
+    path: '/me/messages',
+    alias: 'create-draft-message',
+    description: `Create an open extension (openTypeExtension object) and add custom properties in a new or existing instance of a resource. You can create an open extension in a resource instance and store custom data to it all in the same operation, except for specific resources. The table in the Permissions section lists the resources that support open extensions.`,
+    requestFormat: 'json',
+    parameters: [
+      {
+        name: 'body',
+        description: `New navigation property`,
+        type: 'Body',
+        schema: microsoft_graph_message,
+      },
+    ],
+    response: z.void(),
+    errors: [
+      {
+        status: NaN,
+        description: `Created navigation property.`,
+        schema: microsoft_graph_message,
+      },
+      {
+        status: NaN,
+        description: `error`,
+        schema: microsoft_graph_ODataErrors_ODataError,
+      },
+      {
+        status: NaN,
+        description: `error`,
+        schema: microsoft_graph_ODataErrors_ODataError,
+      },
+    ],
+  },
+  {
     method: 'get',
     path: '/me/messages/:messageId',
     alias: 'get-mail-message',
-    description: `You can get a single resource instance expanded with a specific extended property, or a collection of resource instances
-that include extended properties matching a filter. Using the query parameter $expand allows you to get the specified resource instance expanded with a specific extended
-property. Use a $filter and eq operator on the id property to specify the extended property. This is currently the only way to get the singleValueLegacyExtendedProperty object that represents an extended property. To get resource instances that have certain extended properties, use the $filter query parameter and apply an eq operator
-on the id property. In addition, for numeric extended properties, apply one of the following operators on the value property:
-eq, ne,ge, gt, le, or lt. For string-typed extended properties, apply a contains, startswith, eq, or ne operator on value. The filter is applied to all instances of the resource in the signed-in user&#x27;s mailbox. Filtering the string name (Name) in the id of an extended property is case-sensitive. Filtering the value property of an extended
-property is case-insensitive. The following user resources are supported: As well as the following group resources: See Extended properties overview for more information about when to use
-open extensions or extended properties, and how to specify extended properties.`,
+    description: `Get the properties and relationships of the eventMessage object. Apply the $expand parameter on the event navigation property to get the associated event in an attendee&#x27;s calendar. Currently, this operation returns event message bodies in only HTML format.`,
     requestFormat: 'json',
     parameters: [
       {
