@@ -10,6 +10,24 @@ export function registerAuthTools(server: McpServer, authManager: AuthManager): 
     },
     async ({ force }) => {
       try {
+        // Check if we have a pre-authenticated token from environment
+        if (!force && process.env.MS365_ACCESS_TOKEN) {
+          const loginStatus = await authManager.testLogin();
+          if (loginStatus.success) {
+            return {
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({
+                    status: 'Already authenticated via environment token',
+                    ...loginStatus,
+                  }),
+                },
+              ],
+            };
+          }
+        }
+        
         if (!force) {
           const loginStatus = await authManager.testLogin();
           if (loginStatus.success) {

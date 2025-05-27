@@ -79,6 +79,14 @@ class AuthManager {
     this.msalApp = new PublicClientApplication(this.config);
     this.accessToken = null;
     this.tokenExpiry = null;
+    
+    // Check for pre-authenticated token from environment
+    if (process.env.MS365_ACCESS_TOKEN) {
+      logger.info('Found MS365_ACCESS_TOKEN in environment, using pre-authenticated token');
+      this.accessToken = process.env.MS365_ACCESS_TOKEN;
+      // Set expiry to 1 hour from now (we'll validate it when used)
+      this.tokenExpiry = Date.now() + 3600000;
+    }
   }
 
   async loadTokenCache(): Promise<void> {
@@ -127,6 +135,31 @@ class AuthManager {
   }
 
   async getToken(forceRefresh = false): Promise<string | null> {
+    // First check if we have a pre-authenticated token from environment
+    if (process.env.MS365_ACCESS_TOKEN && !forceRefresh) {
+      // Validate the token is still valid by making a test request
+      try {
+        const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+          headers: {
+            Authorization: `Bearer ${process.env.MS365_ACCESS_TOKEN}`,
+          },
+        });
+        
+        if (response.ok) {
+          logger.info('Environment token is valid');
+          this.accessToken = process.env.MS365_ACCESS_TOKEN;
+          return this.accessToken;
+        } else if (response.status === 401) {
+          logger.warn('Environment token is expired or invalid, falling back to normal auth flow');
+          // Clear the invalid token
+          this.accessToken = null;
+          this.tokenExpiry = null;
+        }
+      } catch (error) {
+        logger.warn(`Error validating environment token: ${(error as Error).message}`);
+      }
+    }
+    
     if (this.accessToken && this.tokenExpiry && this.tokenExpiry > Date.now() && !forceRefresh) {
       return this.accessToken;
     }

@@ -1,7 +1,7 @@
 {
-  "name": "@softeria/ms-365-mcp-server",
-  "version": "0.4.4",
-  "description": "Microsoft 365 MCP Server",
+  "name": "@davidmoore-io/ms-365-mcp-server",
+  "version": "1.0.0",
+  "description": "Microsoft 365 MCP Server - Fork with pre-authenticated token support",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -18,12 +18,19 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "microsoft",
-    "365",
     "mcp",
-    "server"
+    "microsoft-365",
+    "graph-api",
+    "model-context-protocol"
   ],
-  "author": "",
+  "homepage": "https://github.com/davidmoore-io/ms-365-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/davidmoore-io/ms-365-mcp-server/issues"
+  },
+  "author": "David Moore <your-email@example.com>",
+  "contributors": [
+    "Softeria (original author)"
+  ],
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -47,6 +54,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/softeria/ms-365-mcp-server.git"
+    "url": "git+https://github.com/davidmoore-io/ms-365-mcp-server.git"
   }
 }

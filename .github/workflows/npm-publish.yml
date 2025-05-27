@@ -2,7 +2,13 @@ name: Node.js Package
 
 on:
   release:
-    types: [ created ]
+    types: [created]
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   build:
@@ -19,6 +25,8 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    # Only publish on release or if commit message contains [publish]
+    if: github.event_name == 'release' || contains(github.event.head_commit.message, '[publish]')
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,6 +35,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
-      - run: npm publish
+      - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
