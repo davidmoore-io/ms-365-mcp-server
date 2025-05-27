@@ -143,3 +143,5 @@ dist
 openapi
 
 **/.claude/settings.local.json
+.cursorindexingignore
+.specstory/
